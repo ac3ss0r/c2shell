@@ -1,0 +1,6 @@
+﻿  shellcode.cpp
+C:\Users\admin\Desktop\Shellcode funnies\Shellcode\Shellcode\shcutils.h(22,1): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\admin\Desktop\Shellcode funnies\Shellcode\Shellcode\shellcode.cpp(57,12): warning C4477: "printf": в строке форматирования "%lu" требуется аргумент типа "unsigned long", но вариативный аргумент "1" имеет тип "size_t"
+C:\Users\admin\Desktop\Shellcode funnies\Shellcode\Shellcode\shellcode.cpp(57,12): message : рекомендуется использовать "%zu" в строке форматирования
+  LINK : указан параметр /LTCG, но не требуется создание кода; удалите /LTCG из командной строки компоновки для повышения производительности компоновщика
+  Shellcode.vcxproj -> C:\Users\admin\Desktop\Shellcode funnies\Shellcode\x64\Release\Shellcode.exe
