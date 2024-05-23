@@ -14,20 +14,21 @@ SECTION_CODE("shcode") NOINLINE int _fastcall shellcode() {
     typedef void* (*MessageBoxA_t)(int, char*, char*, int);
 
     // Some compilers insert the strings into the .data no matter what you do. So we need to trick em
-    volatile wchar_t k32[30]; volatile int i = 0; 
+    volatile wchar_t k32[30]; volatile int i = 0;
     k32[i++] = 'k'; k32[i++] = 'e'; k32[i++] = 'r'; k32[i++] = 'n'; k32[i++] = 'e'; k32[i++] = 'l'; k32[i++] = '3'; k32[i++] = '2'; k32[i++] = '.';
-    k32[i++] = 'd'; k32[i++] = 'l'; k32[i++] = 'l'; k32[i++] = '\0';
+    k32[i++] = 'd'; k32[i++] = 'l'; k32[i++] = 'l'; k32[i++] = '\0'; 
     volatile char u32[30]; i = 0;
     u32[i++] = 'u';  u32[i++] = 's';  u32[i++] = 'e';  u32[i++] = 'r';  u32[i++] = '3';  u32[i++] = '2'; 
     u32[i++] = '.';  u32[i++] = 'd';  u32[i++] = 'l';  u32[i++] = 'l', u32[i++] = '\0';
     volatile char msg[30]; i = 0;
     msg[i++] = 't'; msg[i++] = 'e'; msg[i++] = 's'; msg[i++] = 't', msg[i++] = '\0';
 
-    /* This DOESN'T work on clang/g++ sadly. Goes to data :broken_heart:
+    /*This DOESN'T work on clang/g++ sadly. Goes to data :broken_heart:
     volatile wchar_t k32[] = { 'k','e','r','n','e','l','3','2','.','d','l','l', 0 };
     volatile char u32[] = { 'u','s','e','r','3','2','.','d','l','l', 0 };
     volatile char msg[] = { 'R','e','a','l', 0};
     */
+    
   
     void* base = get_proc_address((wchar_t*)&k32);
     if (base) {
@@ -55,8 +56,11 @@ int main() {
         fprintf(stderr, "[e] Failed to open shellcode.bin\n");
         return 1;
     }
+
     size_t shellcode_size = (uintptr_t)shellcode_end - (uintptr_t)shellcode;
     printf("[i] Shellcode size: %lu, located at 0x%p\n", shellcode_size, shellcode);
+    fwrite((char*)&shellcode, shellcode_size, 1, output_file);
+
     if (!fwrite((char*)&shellcode, shellcode_size, 1, output_file)) {
         fprintf(stderr, "[e] Failed to dump shellcode to disk. Check your compiler settings.\n");
         fclose(output_file);
