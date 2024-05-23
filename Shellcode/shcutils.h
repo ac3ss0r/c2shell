@@ -4,7 +4,7 @@
 #include <Windows.h>
 
 // Create custom sections on both clang & msc++
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__llvm__)
     #define SECTION_CODE(x) __declspec(code_seg(x))
     #define SECTION_FLD(x) __declspec(allocate(x))
 #else
@@ -12,7 +12,7 @@
     #define SECTION_FLD(x) __attribute__((section(x)))
 #endif
 
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__llvm__)
     #define INLINE __forceinline // Visual C++
 #else
     #define INLINE __attribute__((always_inline)) inline // GCC/G++/CLANG

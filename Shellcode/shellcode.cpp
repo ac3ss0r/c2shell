@@ -2,7 +2,9 @@
 #include "shcutils.h"
 #pragma warning(disable:4996)
 
-#pragma section("shcode", execute)
+#ifdef _MSC_VER
+    #pragma section("shcode", execute)
+#endif
 
 // This method should be fully inline. No use of static fields & external methods is allowed since the shellcode
 // Is supposed to be fully inline & offset independent (use PEB for windows & syscalls for linux)
@@ -42,7 +44,7 @@ SECTION_CODE("shcode") NOINLINE int _fastcall shellcode() {
     return 1;
 }
 // Next function goes directly after the shellcode, this allows to figure out shellcode size & dump it
-__declspec(code_seg("shcode")) NAKED void shellcode_end(void) {}
+SECTION_CODE("shcode") NAKED void shellcode_end(void) {}
 
 typedef int (*shellcode_t)();
 
