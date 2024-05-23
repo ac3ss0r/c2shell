@@ -1,8 +1,8 @@
 ﻿#include <stdio.h>
 #include "shcutils.h"
-#pragma warning(disable:4996)
 
 #ifdef _MSC_VER
+    #pragma warning(disable:4996)
     #pragma section("shcode", execute)
 #endif
 

@@ -13,6 +13,7 @@
 *.log
 *.tlog
 *.idb
+*.asm
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

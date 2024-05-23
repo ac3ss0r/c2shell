@@ -1,10 +1,14 @@
 #ifndef PEB_H
 #define PEB_H
 
-#include <Windows.h>
+#if defined(_WIN64) || defined(WIN64) || defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
+#define _WINDOWS
+#elif defined(__linux__) || defined(__ANDROID__)
+#define _LINUX
+#endif
 
 // Create custom sections on both clang & msc++
-#if defined(_MSC_VER) && !defined(__llvm__)
+#if defined(_MSC_VER)
     #define SECTION_CODE(x) __declspec(code_seg(x))
     #define SECTION_FLD(x) __declspec(allocate(x))
 #else
@@ -34,6 +38,11 @@
 #else 
     #define NOINLINE __attribute__((noinline))
 #endif
+
+// On windows we use PEB & TEB, on linux we'll use inline syscalls for shellcoding
+#ifdef _WINDOWS 
+
+#include <windows.h>
 
 #ifndef __NTDLL_H__
 
@@ -203,5 +212,7 @@ int dump_pe_section(char* file, char* section, char* output) {
     fclose(inputFile);
     return 3;
 }*/
+
+#endif
 
 #endif
