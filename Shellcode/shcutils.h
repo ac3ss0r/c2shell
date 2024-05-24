@@ -1,10 +1,17 @@
-#ifndef PEB_H
+﻿#ifndef PEB_H
 #define PEB_H
 
 #if defined(_WIN64) || defined(WIN64) || defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
     #define _WINDOWS
 #elif defined(__linux__) || defined(__ANDROID__)
     #define _LINUX
+#endif
+
+#ifdef _WINDOWS
+    #include <windows.h>
+#elif defined(_LINUX)
+    #include <unistd.h>
+    #include <sys/syscall.h>
 #endif
 
 // Create custom sections on both clang & msc++
@@ -213,6 +220,73 @@ INLINE constexpr int adler32(const char* data) {
         return 3;
     }*/
 
+#elif defined(_LINUX)
+
+    #define SYSCALL(...) inline_syscall(__VA_ARGS__)
+
+    INLINE long inline_syscall(long syscall_number, long arg1, long arg2, long arg3, long arg4, long arg5) {
+        long ret;
+    #if defined(__x86_64__)
+        __asm__ volatile (
+            "mov %1, %%rax;"
+            "mov %2, %%rdi;"
+            "mov %3, %%rsi;"
+            "mov %4, %%rdx;"
+            "mov %5, %%r10;"
+            "mov %6, %%r8;"
+            "syscall;"
+            "mov %%rax, %0;"
+            : "=m" (ret)
+            : "g" (syscall_number), "g" (arg1), "g" (arg2), "g" (arg3), "g" (arg4), "g" (arg5)
+            : "%rax", "%rdi", "%rsi", "%rdx", "%r10", "%r8"
+            );
+    #elif defined(__i386__)
+        __asm__ volatile (
+            "mov %1, %%eax;"
+            "mov %2, %%ebx;"
+            "mov %3, %%ecx;"
+            "mov %4, %%edx;"
+            "mov %5, %%esi;"
+            "mov %6, %%edi;"
+            "int $0x80;"
+            "mov %%eax, %0;"
+            : "=m" (ret)
+            : "g" (syscall_number), "g" (arg1), "g" (arg2), "g" (arg3), "g" (arg4), "g" (arg5)
+            : "%eax", "%ebx", "%ecx", "%edx", "%esi", "%edi"
+            );
+    #elif defined(__arm__)
+        __asm__ volatile (
+            "mov r7, %1;"
+            "mov r0, %2;"
+            "mov r1, %3;"
+            "mov r2, %4;"
+            "mov r3, %5;"
+            "mov r4, %6;"
+            "swi 0;"
+            "mov %0, r0;"
+            : "=r" (ret)
+            : "r" (syscall_number), "r" (arg1), "r" (arg2), "r" (arg3), "r" (arg4), "r" (arg5)
+            : "r0", "r1", "r2", "r3", "r4", "r7"
+            );
+    #elif defined(__aarch64__)
+        __asm__ volatile (
+            "mov x8, %1;"
+            "mov x0, %2;"
+            "mov x1, %3;"
+            "mov x2, %4;"
+            "mov x3, %5;"
+            "mov x4, %6;"
+            "svc 0;"
+            "mov %0, x0;"
+            : "=r" (ret)
+            : "r" (syscall_number), "r" (arg1), "r" (arg2), "r" (arg3), "r" (arg4), "r" (arg5)
+            : "x0", "x1", "x2", "x3", "x4", "x8"
+            );
+    #else
+    #error "Unsupported architecture"
+    #endif
+        return ret;
+    }
 #endif
 
 #endif

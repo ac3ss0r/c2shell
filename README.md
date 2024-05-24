@@ -26,7 +26,6 @@ This way the shellcode can be extracted via 2 methods: function address substrac
     <text>Function address substraction to extract shellcode</text>
 </div>
 
-
 ## ℹ️ Demonstration
 <div align=center style="background-color: transparent;">
     <img width="100%" src="Images/vsc++preview.jpg"></img>
@@ -36,4 +35,8 @@ This way the shellcode can be extracted via 2 methods: function address substrac
 <div align=center style="background-color: transparent;">
     <img width="100%" src="Images/clang_preview.jpg"></img>
     <text>Clang (LLVM MinGW) compiler</text>
+</div>
+<div align=center style="background-color: transparent;">
+    <img width="100%" src="Images/android_preview.jpg"></img>
+    <text>Clang ARM64 (Android) compiler</text>
 </div>

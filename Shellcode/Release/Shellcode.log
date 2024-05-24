@@ -1,5 +1,5 @@
 ﻿cl : командная строка warning D9025: переопределение "/GS" на "/GS-"
 cl : командная строка warning D9025: переопределение "/sdl" на "/GS-"
   shellcode.cpp
-C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shcutils.h(26,1): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
+C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shcutils.h(40,1): warning C4067: непредвиденные лексемы за директивой препроцессора, требуется newline
   Shellcode.vcxproj -> C:\Users\admin\Documents\GitHub\ShellcodeLab\Release\Shellcode.exe

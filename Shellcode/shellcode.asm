@@ -13,7 +13,7 @@ PUBLIC	___local_stdio_printf_options
 PUBLIC	__vfprintf_l
 PUBLIC	_fprintf
 PUBLIC	_printf
-PUBLIC	?shellcode@@YIHXZ				; shellcode
+PUBLIC	?shellcode@@YAHXZ				; shellcode
 PUBLIC	?shellcode_end@@YAXXZ				; shellcode_end
 PUBLIC	_main
 PUBLIC	?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA ; `__local_stdio_printf_options'::`2'::_OptionsStorage
@@ -38,7 +38,7 @@ EXTRN	__imp__fseek:PROC
 EXTRN	__imp__ftell:PROC
 EXTRN	__imp__fwrite:PROC
 EXTRN	__imp____stdio_common_vfprintf:PROC
-EXTRN	__imp__VirtualAlloc@16:PROC
+EXTRN	__imp__malloc:PROC
 EXTRN	__imp__VirtualProtect@16:PROC
 EXTRN	__imp__VirtualFree@12:PROC
 ;	COMDAT ?_OptionsStorage@?1??__local_stdio_printf_options@@9@4_KA
@@ -207,23 +207,23 @@ _flOldProtect$ = -8					; size = 4
 _fileSize$1$ = -4					; size = 4
 _main	PROC						; COMDAT
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shellcode.cpp
-; Line 49
+; Line 67
 	push	ebp
 	mov	ebp, esp
 	push	ecx
 	push	ecx
-	push	edi
-; Line 51
+	push	ebx
+; Line 68
 	push	OFFSET ??_C@_02GMLFBBN@wb@
 	push	OFFSET ??_C@_0O@NFBNADIO@shellcode?4bin@
 	call	DWORD PTR __imp__fopen
-	mov	edi, eax
+	mov	ebx, eax
 	pop	ecx
 	pop	ecx
-; Line 52
-	test	edi, edi
+; Line 69
+	test	ebx, ebx
 	jne	SHORT $LN2@main
-; Line 53
+; Line 70
 	push	OFFSET ??_C@_0CC@CNIGJHCH@?$FLe?$FN?5Failed?5to?5open?5shellcode?4bi@
 	push	2
 	call	DWORD PTR __imp____acrt_iob_func
@@ -231,63 +231,70 @@ _main	PROC						; COMDAT
 	push	eax
 	call	_fprintf
 	pop	ecx
-; Line 54
+; Line 71
 	xor	eax, eax
 	pop	ecx
 	inc	eax
 	jmp	$LN1@main
 $LN2@main:
-	push	ebx
 	push	esi
-; Line 56
-	mov	ebx, OFFSET ?shellcode@@YIHXZ		; shellcode
-	mov	esi, OFFSET ?shellcode_end@@YAXXZ	; shellcode_end
-; Line 57
-	push	ebx
-	sub	esi, ebx
+	push	edi
+; Line 73
+	mov	esi, OFFSET ?shellcode@@YAHXZ		; shellcode
+	mov	edi, OFFSET ?shellcode_end@@YAXXZ	; shellcode_end
+; Line 74
 	push	esi
+	sub	edi, esi
+	push	edi
 	push	OFFSET ??_C@_0CK@CNHACEFP@?$FLi?$FN?5Shellcode?5size?3?5?$CFlu?0?5locate@
 	call	_printf
-; Line 58
-	push	edi
-	push	1
-	push	esi
+; Line 75
 	push	ebx
-	call	DWORD PTR __imp__fwrite
-	add	esp, 28					; 0000001cH
+	push	1
+	push	edi
+	push	esi
+	mov	esi, DWORD PTR __imp__fwrite
+	call	esi
+; Line 77
+	push	ebx
+	push	1
+	push	edi
+	push	OFFSET ?shellcode@@YAHXZ		; shellcode
+	call	esi
+	add	esp, 44					; 0000002cH
 	test	eax, eax
 	jne	SHORT $LN3@main
-; Line 59
+; Line 78
 	push	OFFSET ??_C@_0EF@MOLEIFGD@?$FLe?$FN?5Failed?5to?5dump?5shellcode?5to@
 	push	2
 	call	DWORD PTR __imp____acrt_iob_func
 	pop	ecx
 	push	eax
 	call	_fprintf
-; Line 60
-	push	edi
+; Line 79
+	push	ebx
 	call	DWORD PTR __imp__fclose
-; Line 61
-	jmp	$LN14@main
+; Line 80
+	jmp	$LN13@main
 $LN3@main:
-; Line 63
+; Line 82
+	push	ebx
 	mov	ebx, DWORD PTR __imp__fclose
-	push	edi
 	call	ebx
-; Line 64
+; Line 83
 	mov	DWORD PTR [esp], OFFSET ??_C@_0CM@JHEGLBMC@?$FLi?$FN?5Shellcode?5saved?5to?5file?5she@
 	call	_printf
-; Line 67
+; Line 85
 	mov	DWORD PTR [esp], OFFSET ??_C@_02JDPG@rb@
 	push	OFFSET ??_C@_0O@NFBNADIO@shellcode?4bin@
 	call	DWORD PTR __imp__fopen
 	mov	edi, eax
 	pop	ecx
 	pop	ecx
-; Line 68
+; Line 86
 	test	edi, edi
 	jne	SHORT $LN4@main
-; Line 69
+; Line 87
 	push	OFFSET ??_C@_0CC@CNIGJHCH@?$FLe?$FN?5Failed?5to?5open?5shellcode?4bi@
 	push	2
 	call	DWORD PTR __imp____acrt_iob_func
@@ -295,54 +302,48 @@ $LN3@main:
 	push	eax
 	call	_fprintf
 	pop	ecx
-$LN12@main:
-; Line 98
-	xor	eax, eax
-	inc	eax
-	jmp	$LN11@main
+; Line 88
+	jmp	$LN12@main
 $LN4@main:
-; Line 72
+; Line 90
 	mov	esi, DWORD PTR __imp__fseek
 	push	2
 	push	0
 	push	edi
 	call	esi
-; Line 73
+; Line 91
 	push	edi
 	call	DWORD PTR __imp__ftell
-; Line 74
+; Line 92
 	push	0
 	push	0
 	push	edi
 	mov	DWORD PTR _fileSize$1$[ebp], eax
 	call	esi
-	add	esp, 28					; 0000001cH
-; Line 75
-	push	4
-	push	4096					; 00001000H
+; Line 94
 	push	DWORD PTR _fileSize$1$[ebp]
-	push	0
-	call	DWORD PTR __imp__VirtualAlloc@16
+	call	DWORD PTR __imp__malloc
 	mov	esi, eax
-; Line 76
+	add	esp, 32					; 00000020H
+; Line 96
 	test	esi, esi
 	jne	SHORT $LN5@main
-; Line 77
+; Line 97
 	push	OFFSET ??_C@_0CN@KKANALMI@?$FLe?$FN?5Failed?5to?5allocate?5memory?5f@
 	push	2
 	call	DWORD PTR __imp____acrt_iob_func
 	pop	ecx
 	push	eax
 	call	_fprintf
-; Line 78
+; Line 98
 	push	edi
 	call	ebx
-$LN14@main:
-; Line 93
+$LN13@main:
+; Line 119
 	add	esp, 12					; 0000000cH
-	jmp	$LN13@main
+	jmp	$LN11@main
 $LN5@main:
-; Line 81
+; Line 101
 	push	edi
 	push	DWORD PTR _fileSize$1$[ebp]
 	push	1
@@ -351,7 +352,7 @@ $LN5@main:
 	add	esp, 16					; 00000010H
 	cmp	eax, DWORD PTR _fileSize$1$[ebp]
 	je	SHORT $LN6@main
-; Line 82
+; Line 102
 	push	OFFSET ??_C@_0BO@KJKJAGIL@?$FLe?$FN?5Failed?5to?5read?5shellcode?6@
 	push	2
 	call	DWORD PTR __imp____acrt_iob_func
@@ -360,27 +361,29 @@ $LN5@main:
 	call	_fprintf
 	pop	ecx
 	pop	ecx
-; Line 83
+; Line 104
 	push	32768					; 00008000H
 	push	0
 	push	esi
 	call	DWORD PTR __imp__VirtualFree@12
-; Line 84
+; Line 108
 	push	edi
 	call	ebx
-; Line 85
-	jmp	$LN12@main
+$LN12@main:
+; Line 119
+	pop	ecx
+	jmp	SHORT $LN11@main
 $LN6@main:
-; Line 87
+; Line 111
 	push	edi
 	call	ebx
-; Line 88
+; Line 112
 	mov	ebx, DWORD PTR _fileSize$1$[ebp]
 	push	ebx
 	push	OFFSET ??_C@_0CA@FFCIEFBF@?$FLi?$FN?5Loaded?5shellcode?5size?3?5?$CFld?6@
 	call	_printf
 	add	esp, 12					; 0000000cH
-; Line 90
+; Line 116
 	lea	eax, DWORD PTR _flOldProtect$[ebp]
 	push	eax
 	push	64					; 00000040H
@@ -389,7 +392,7 @@ $LN6@main:
 	call	DWORD PTR __imp__VirtualProtect@16
 	test	eax, eax
 	jne	SHORT $LN7@main
-; Line 91
+; Line 117
 	push	OFFSET ??_C@_0CI@GCOJCDBI@?$FLe?$FN?5Failed?5to?5change?5memory?5pro@
 	push	2
 	call	DWORD PTR __imp____acrt_iob_func
@@ -398,43 +401,34 @@ $LN6@main:
 	call	_fprintf
 	pop	ecx
 	pop	ecx
-; Line 92
+; Line 118
 	push	32768					; 00008000H
 	push	0
 	push	esi
 	call	DWORD PTR __imp__VirtualFree@12
-$LN13@main:
-; Line 93
+$LN11@main:
+; Line 119
 	xor	eax, eax
 	inc	eax
 	jmp	SHORT $LN9@main
 $LN7@main:
-; Line 96
+; Line 130
 	call	esi
 	push	eax
 	push	OFFSET ??_C@_0M@LDNOBAB@Result?3?5?$CFd?6@
 	call	_printf
-	pop	ecx
-	pop	ecx
-; Line 97
-	push	32768					; 00008000H
-	push	0
-	push	esi
-	call	DWORD PTR __imp__VirtualFree@12
-; Line 98
+; Line 132
 	push	OFFSET ??_C@_0CN@CMKKBCPN@Shellcode?5execution?5completed?5s@
 	call	_printf
-; Line 99
+	add	esp, 12					; 0000000cH
+; Line 133
 	xor	eax, eax
-$LN11@main:
-; Line 98
-	pop	ecx
 $LN9@main:
-	pop	esi
-	pop	ebx
-$LN1@main:
 	pop	edi
-; Line 100
+	pop	esi
+$LN1@main:
+	pop	ebx
+; Line 134
 	leave
 	ret	0
 _main	ENDP
@@ -444,12 +438,12 @@ _TEXT	ENDS
 shcode	SEGMENT
 ?shellcode_end@@YAXXZ PROC				; shellcode_end, COMDAT
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shellcode.cpp
-; Line 45
+; Line 63
 	ret	0
 ?shellcode_end@@YAXXZ ENDP				; shellcode_end
 shcode	ENDS
 ; Function compile flags: /Ogsp
-;	COMDAT ?shellcode@@YIHXZ
+;	COMDAT ?shellcode@@YAHXZ
 shcode	SEGMENT
 _msg$ = -160						; size = 30
 _k32$ = -128						; size = 60
@@ -476,16 +470,16 @@ _a$1$ = -4						; size = 4
 tv1252 = -4						; size = 4
 _a$1$ = -4						; size = 4
 _i$ = -4						; size = 4
-?shellcode@@YIHXZ PROC					; shellcode, COMDAT
+?shellcode@@YAHXZ PROC					; shellcode, COMDAT
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shellcode.cpp
-; Line 9
+; Line 18
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 160				; 000000a0H
 	push	ebx
 	push	esi
 	push	edi
-; Line 16
+; Line 26
 	push	107					; 0000006bH
 	pop	ecx
 	push	101					; 00000065H
@@ -529,7 +523,7 @@ _i$ = -4						; size = 4
 	mov	WORD PTR _k32$[ebp+eax*2], cx
 	inc	DWORD PTR _i$[ebp]
 	mov	eax, DWORD PTR _i$[ebp]
-; Line 17
+; Line 27
 	push	100					; 00000064H
 	pop	edx
 	push	108					; 0000006cH
@@ -549,9 +543,9 @@ _i$ = -4						; size = 4
 	mov	eax, DWORD PTR _i$[ebp]
 	mov	WORD PTR _k32$[ebp+eax*2], cx
 	inc	DWORD PTR _i$[ebp]
-; Line 18
+; Line 28
 	mov	DWORD PTR _i$[ebp], esi
-; Line 19
+; Line 29
 	mov	eax, DWORD PTR _i$[ebp]
 	mov	BYTE PTR _u32$[ebp+eax], 117		; 00000075H
 	inc	DWORD PTR _i$[ebp]
@@ -568,7 +562,7 @@ _i$ = -4						; size = 4
 	mov	BYTE PTR _u32$[ebp+eax], 51		; 00000033H
 	inc	DWORD PTR _i$[ebp]
 	mov	eax, DWORD PTR _i$[ebp]
-; Line 20
+; Line 30
 	push	108					; 0000006cH
 	pop	ecx
 	mov	BYTE PTR _u32$[ebp+eax], 50		; 00000032H
@@ -589,9 +583,9 @@ _i$ = -4						; size = 4
 	mov	eax, DWORD PTR _i$[ebp]
 	mov	BYTE PTR _u32$[ebp+eax], bl
 	inc	DWORD PTR _i$[ebp]
-; Line 21
+; Line 31
 	mov	DWORD PTR _i$[ebp], ebx
-; Line 22
+; Line 32
 	mov	eax, DWORD PTR _i$[ebp]
 	mov	BYTE PTR _msg$[ebp+eax], 116		; 00000074H
 	inc	DWORD PTR _i$[ebp]
@@ -608,24 +602,24 @@ _i$ = -4						; size = 4
 	mov	BYTE PTR _msg$[ebp+eax], bl
 	inc	DWORD PTR _i$[ebp]
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shcutils.h
-; Line 117
+; Line 133
 	mov	eax, DWORD PTR fs:48
-; Line 123
+; Line 139
 	mov	eax, DWORD PTR [eax+12]
 	mov	edx, DWORD PTR [eax+12]
 	mov	DWORD PTR _curr_module$1$[ebp], edx
-; Line 125
+; Line 141
 	test	edx, edx
 	je	$LN78@shellcode
 	mov	DWORD PTR tv1252[ebp], 25		; 00000019H
 $LL7@shellcode:
 	cmp	DWORD PTR [edx+24], ebx
 	je	$LN78@shellcode
-; Line 126
+; Line 142
 	mov	edi, DWORD PTR [edx+48]
 	test	edi, edi
 	je	SHORT $LN58@shellcode
-; Line 130
+; Line 146
 	cmp	WORD PTR _k32$[ebp], 0
 	mov	esi, ebx
 	je	SHORT $LN80@shellcode
@@ -635,7 +629,7 @@ $LL11@shellcode:
 	movzx	ebx, WORD PTR [ecx+edi]
 	test	bx, bx
 	je	SHORT $LN81@shellcode
-; Line 132
+; Line 148
 	movzx	eax, WORD PTR _k32$[ebp+ecx]
 	add	eax, -65				; ffffffbfH
 	cmp	ax, WORD PTR tv1252[ebp]
@@ -645,7 +639,7 @@ $LL11@shellcode:
 	mov	WORD PTR _k32$[ebp+ecx], ax
 	movzx	eax, ax
 $LN16@shellcode:
-; Line 133
+; Line 149
 	mov	DWORD PTR _c1$1$[ebp], eax
 	lea	eax, DWORD PTR [ebx-65]
 	cmp	ax, WORD PTR tv1252[ebp]
@@ -657,10 +651,10 @@ $LN16@shellcode:
 $LN18@shellcode:
 	mov	eax, ebx
 $LN19@shellcode:
-; Line 134
+; Line 150
 	cmp	WORD PTR _c1$1$[ebp], ax
 	jne	SHORT $LN81@shellcode
-; Line 130
+; Line 146
 	inc	esi
 	lea	ecx, DWORD PTR [esi+esi]
 	cmp	WORD PTR _k32$[ebp+ecx], dx
@@ -669,26 +663,26 @@ $LN81@shellcode:
 	mov	edx, DWORD PTR _curr_module$1$[ebp]
 	xor	ebx, ebx
 $LN80@shellcode:
-; Line 136
+; Line 152
 	cmp	WORD PTR _k32$[ebp+esi*2], bx
 	jne	SHORT $LN14@shellcode
 	cmp	WORD PTR [edi+esi*2], bx
 	je	SHORT $LN54@shellcode
 $LN14@shellcode:
-; Line 138
+; Line 154
 	mov	edx, DWORD PTR [edx]
 	mov	DWORD PTR _curr_module$1$[ebp], edx
 $LN58@shellcode:
-; Line 125
+; Line 141
 	test	edx, edx
 	jne	$LL7@shellcode
 $LN78@shellcode:
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shellcode.cpp
-; Line 42
+; Line 60
 	xor	eax, eax
 	inc	eax
 $LN1@shellcode:
-; Line 43
+; Line 61
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -696,35 +690,35 @@ $LN1@shellcode:
 	ret	0
 $LN54@shellcode:
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shcutils.h
-; Line 137
+; Line 153
 	mov	ecx, DWORD PTR [edx+24]
 	mov	DWORD PTR _base$1$[ebp], ecx
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shellcode.cpp
-; Line 31
+; Line 41
 	test	ecx, ecx
 	je	SHORT $LN78@shellcode
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shcutils.h
-; Line 145
+; Line 161
 	mov	eax, 23117				; 00005a4dH
 	cmp	WORD PTR [ecx], ax
 	jne	SHORT $LN78@shellcode
-; Line 149
+; Line 165
 	mov	eax, DWORD PTR [ecx+60]
 	mov	eax, DWORD PTR [eax+ecx+120]
 	test	eax, eax
 	je	SHORT $LN78@shellcode
-; Line 154
+; Line 170
 	mov	edx, ebx
 	mov	ebx, DWORD PTR [eax+ecx+24]
 	mov	DWORD PTR _i$1$[ebp], edx
 	mov	DWORD PTR $T1[ebp], ebx
 	test	ebx, ebx
 	je	SHORT $LN78@shellcode
-; Line 156
+; Line 172
 	mov	edi, DWORD PTR [eax+ecx+32]
 	mov	ebx, DWORD PTR [eax+ecx+36]
 	add	edi, ecx
-; Line 157
+; Line 173
 	mov	esi, DWORD PTR [eax+ecx+28]
 	add	ebx, ecx
 	mov	DWORD PTR tv1233[ebp], esi
@@ -732,35 +726,35 @@ $LN54@shellcode:
 	mov	DWORD PTR tv1223[ebp], ebx
 $LL23@shellcode:
 	movzx	eax, WORD PTR [ebx]
-; Line 102
+; Line 55
 	mov	DWORD PTR _a$1$[ebp], 1
-; Line 157
+; Line 173
 	lea	eax, DWORD PTR [esi+eax*4]
-; Line 102
+; Line 55
 	xor	esi, esi
-; Line 157
+; Line 173
 	add	eax, ecx
 	mov	DWORD PTR _funcRVA$1$[ebp], eax
-; Line 158
+; Line 174
 	mov	eax, DWORD PTR [edi]
 	add	eax, ecx
 	mov	DWORD PTR _curr_name$1$[ebp], eax
-; Line 103
+; Line 56
 	mov	al, BYTE PTR [eax]
 	test	al, al
 	je	SHORT $LN76@shellcode
 	mov	ecx, DWORD PTR _curr_name$1$[ebp]
-; Line 156
+; Line 172
 	mov	edi, 65521				; 0000fff1H
 	mov	ebx, DWORD PTR _a$1$[ebp]
 $LL31@shellcode:
-; Line 104
+; Line 57
 	movsx	eax, al
 	add	eax, ebx
 	cdq
 	idiv	edi
 	mov	ebx, edx
-; Line 105
+; Line 58
 	lea	eax, DWORD PTR [esi+ebx]
 	cdq
 	idiv	edi
@@ -773,15 +767,15 @@ $LL31@shellcode:
 	mov	edi, DWORD PTR tv1224[ebp]
 	mov	DWORD PTR _a$1$[ebp], ebx
 	mov	ebx, DWORD PTR tv1223[ebp]
-; Line 107
+; Line 60
 	shl	esi, 16					; 00000010H
 	or	esi, DWORD PTR _a$1$[ebp]
-; Line 160
+; Line 176
 	cmp	esi, 494994583				; 1d810497H
 	je	SHORT $LN55@shellcode
 	mov	edx, DWORD PTR _i$1$[ebp]
 $LN76@shellcode:
-; Line 154
+; Line 170
 	inc	edx
 	add	ebx, 2
 	add	edi, 4
@@ -793,45 +787,45 @@ $LN76@shellcode:
 	mov	esi, DWORD PTR tv1233[ebp]
 	jmp	SHORT $LL23@shellcode
 $LN55@shellcode:
-; Line 160
+; Line 176
 	mov	eax, DWORD PTR _funcRVA$1$[ebp]
 	mov	eax, DWORD PTR [eax]
 	add	eax, ecx
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shellcode.cpp
-; Line 33
+; Line 43
 	je	$LN78@shellcode
-; Line 34
+; Line 44
 	lea	ecx, DWORD PTR _u32$[ebp]
 	push	ecx
 	call	eax
 	pop	ecx
 	mov	ecx, eax
 	mov	DWORD PTR _handle$1$[ebp], ecx
-; Line 35
+; Line 45
 	test	ecx, ecx
 	je	$LN78@shellcode
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shcutils.h
-; Line 145
+; Line 161
 	mov	eax, 23117				; 00005a4dH
 	cmp	WORD PTR [ecx], ax
 	jne	$LN79@shellcode
-; Line 149
+; Line 165
 	mov	eax, DWORD PTR [ecx+60]
 	mov	eax, DWORD PTR [eax+ecx+120]
 	test	eax, eax
 	je	$LN79@shellcode
-; Line 154
+; Line 170
 	mov	ebx, DWORD PTR [eax+ecx+24]
 	xor	edx, edx
 	mov	DWORD PTR _i$1$[ebp], edx
 	mov	DWORD PTR $T2[ebp], ebx
 	test	ebx, ebx
 	je	$LN79@shellcode
-; Line 156
+; Line 172
 	mov	edi, DWORD PTR [eax+ecx+32]
 	mov	ebx, DWORD PTR [eax+ecx+36]
 	add	edi, ecx
-; Line 157
+; Line 173
 	mov	esi, DWORD PTR [eax+ecx+28]
 	add	ebx, ecx
 	mov	DWORD PTR tv1231[ebp], esi
@@ -839,35 +833,35 @@ $LN55@shellcode:
 	mov	DWORD PTR tv1218[ebp], ebx
 $LL36@shellcode:
 	movzx	eax, WORD PTR [ebx]
-; Line 102
+; Line 55
 	mov	DWORD PTR _a$1$[ebp], 1
-; Line 157
+; Line 173
 	lea	eax, DWORD PTR [esi+eax*4]
-; Line 102
+; Line 55
 	xor	esi, esi
-; Line 157
+; Line 173
 	add	eax, ecx
 	mov	DWORD PTR _funcRVA$1$[ebp], eax
-; Line 158
+; Line 174
 	mov	eax, DWORD PTR [edi]
 	add	eax, ecx
 	mov	DWORD PTR _curr_name$1$[ebp], eax
-; Line 103
+; Line 56
 	mov	al, BYTE PTR [eax]
 	test	al, al
 	je	SHORT $LN75@shellcode
 	mov	ecx, DWORD PTR _curr_name$1$[ebp]
-; Line 156
+; Line 172
 	mov	edi, 65521				; 0000fff1H
 	mov	ebx, DWORD PTR _a$1$[ebp]
 $LL44@shellcode:
-; Line 104
+; Line 57
 	movsx	eax, al
 	add	eax, ebx
 	cdq
 	idiv	edi
 	mov	ebx, edx
-; Line 105
+; Line 58
 	lea	eax, DWORD PTR [esi+ebx]
 	cdq
 	idiv	edi
@@ -880,15 +874,15 @@ $LL44@shellcode:
 	mov	edi, DWORD PTR tv1219[ebp]
 	mov	DWORD PTR _a$1$[ebp], ebx
 	mov	ebx, DWORD PTR tv1218[ebp]
-; Line 107
+; Line 60
 	shl	esi, 16					; 00000010H
 	or	esi, DWORD PTR _a$1$[ebp]
-; Line 160
+; Line 176
 	cmp	esi, 427754544				; 197f0430H
 	je	SHORT $LN56@shellcode
 	mov	edx, DWORD PTR _i$1$[ebp]
 $LN75@shellcode:
-; Line 154
+; Line 170
 	inc	edx
 	add	ebx, 2
 	add	edi, 4
@@ -900,14 +894,14 @@ $LN75@shellcode:
 	mov	esi, DWORD PTR tv1231[ebp]
 	jmp	SHORT $LL36@shellcode
 $LN56@shellcode:
-; Line 160
+; Line 176
 	mov	eax, DWORD PTR _funcRVA$1$[ebp]
 	mov	eax, DWORD PTR [eax]
 	add	eax, ecx
 	jmp	SHORT $LN33@shellcode
 $LN79@shellcode:
 ; File C:\Users\admin\Documents\GitHub\ShellcodeLab\Shellcode\shellcode.cpp
-; Line 37
+; Line 47
 	xor	eax, eax
 $LN33@shellcode:
 	push	0
@@ -917,10 +911,10 @@ $LN33@shellcode:
 	push	0
 	call	eax
 	add	esp, 16					; 00000010H
-; Line 38
+; Line 48
 	xor	eax, eax
 	jmp	$LN1@shellcode
-?shellcode@@YIHXZ ENDP					; shellcode
+?shellcode@@YAHXZ ENDP					; shellcode
 shcode	ENDS
 ; Function compile flags: /Ogsp
 ;	COMDAT _printf
