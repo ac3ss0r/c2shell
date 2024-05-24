@@ -29,12 +29,12 @@ This way the shellcode can be extracted via 2 methods: function address substrac
 ## ℹ️ Demonstration
 <div align=center style="background-color: transparent;">
     <img width="100%" src="Images/vsc++preview.jpg"></img>
-    <text>Visual C++ compiler</text>
+    <text>Microsoft Visual C++ compiler</text>
 </div>
 <br/>
 <div align=center style="background-color: transparent;">
     <img width="100%" src="Images/clang_preview.jpg"></img>
-    <text>Clang (LLVM MinGW) compiler</text>
+    <text>Clang (LLVM/MinGW) compiler</text>
 </div>
 <br/>
 <div align=center style="background-color: transparent;">
