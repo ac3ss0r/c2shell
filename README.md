@@ -10,19 +10,19 @@ A shellcode is an offset-independent assembly code which can be executed from an
 Usually shellcodes are made in pure asm, since forcing the compiler to properly create & extracting shellcodes can be a headache. Yet ShellcodeLab solves this problem.
 
 <div align=center style="background-color: transparent;">
-    <img width="100%" src="Images/shellcode_preview1.png"></img>
+    <img width="100%" src="Images/shellcode_source.png"></img>
     <text>Two methods are used to mark & dump shellcode from a compiled C method</text>
 </div>
 <br/>
 <div align=center style="background-color: transparent;">
-    <img width="100%" src="Images/shellcode_preview0.png"></img>
+    <img width="100%" src="Images/shellcode_binja.png"></img>
     <text>When compiled, the shellcode is placed in a separete section</text>
 </div><br/>
 
 This way the shellcode can be extracted via 2 methods: function address substraction during runtime, or PE/ELF section parsing. I prefer the first one, since it's easier + more universal.
 
 <div align=center style="background-color: transparent;">
-    <img width="100%" src="Images/shellcode_preview2.png"></img>
+    <img width="100%" src="Images/shellcode_source_2.png"></img>
     <text>Function address substraction to extract shellcode</text>
 </div>
 
@@ -36,6 +36,7 @@ This way the shellcode can be extracted via 2 methods: function address substrac
     <img width="100%" src="Images/clang_preview.jpg"></img>
     <text>Clang (LLVM MinGW) compiler</text>
 </div>
+<br/>
 <div align=center style="background-color: transparent;">
     <img width="100%" src="Images/android_preview.jpg"></img>
     <text>Clang ARM64 (Android) compiler</text>
