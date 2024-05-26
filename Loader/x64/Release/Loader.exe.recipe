@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\admin\Desktop\Shellcode funnies\Shellcode\x64\Release\Loader.exe</FullPath>
+      <FullPath>C:\Users\admin\Documents\GitHub\ShellcodeLab\x64\Release\Loader.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

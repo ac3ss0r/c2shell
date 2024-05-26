@@ -37,13 +37,13 @@ SECTION_CODE("shcode") NOINLINE int /*_fastcall*/ shellcode() {
         volatile char msg[] = { 'R','e','a','l', 0};
         */
   
-        void* base = get_proc_address((wchar_t*)&k32);
+        void* base = get_module_handle((wchar_t*)&k32);
         if (base) {
-            LoadLibraryA_t LoadLibA = (LoadLibraryA_t) get_module_handle(base, HASH("LoadLibraryA"));
+            LoadLibraryA_t LoadLibA = (LoadLibraryA_t) get_proc_address(base, HASH("LoadLibraryA"));
             if (LoadLibA) {
                 void* handle = LoadLibA((char*)u32);
                 if (handle) {
-                    MessageBoxA_t MsgBoxA = (MessageBoxA_t) get_module_handle(handle, HASH("MessageBoxA"));
+                    MessageBoxA_t MsgBoxA = (MessageBoxA_t) get_proc_address(handle, HASH("MessageBoxA"));
                     MsgBoxA(0, (char*)msg, (char*)msg, MB_OK);
                     return 0;
                 }

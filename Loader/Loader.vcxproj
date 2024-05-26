@@ -142,7 +142,7 @@
     <ClCompile Include="Loader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="peb_utils.h" />
+    <ClInclude Include="shcutils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

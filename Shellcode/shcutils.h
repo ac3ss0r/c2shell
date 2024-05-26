@@ -125,7 +125,7 @@ INLINE constexpr int adler32(const char* data) {
 
     #endif //__NTDLL_H__
 
-    INLINE LPVOID get_proc_address(WCHAR* module_name) {
+    INLINE LPVOID get_module_handle(WCHAR* module_name) {
         PPEB peb = NULL;
         #if defined(_WIN64)
             peb = reinterpret_cast<PPEB>(__readgsqword(0x60));
@@ -156,7 +156,7 @@ INLINE constexpr int adler32(const char* data) {
         return NULL;
     }
 
-    INLINE LPVOID get_module_handle(LPVOID module, int hash) {
+    INLINE LPVOID get_proc_address(LPVOID module, int hash) {
         IMAGE_DOS_HEADER* idh = (IMAGE_DOS_HEADER*)module;
         if (idh->e_magic != IMAGE_DOS_SIGNATURE) return NULL;
 
