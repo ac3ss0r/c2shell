@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\admin\Desktop\Shellcode funnies\Shellcode\Debug\Shellcode.exe</FullPath>
+      <FullPath>C:\Users\admin\Documents\GitHub\ShellcodeLab\Debug\Shellcode.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

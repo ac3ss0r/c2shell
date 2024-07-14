@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <assert.h>
 #ifdef _WIN32
     #include <windows.h>
 #else
@@ -22,22 +23,28 @@ SECTION_CODE("shcode") NOINLINE int /*_fastcall*/ shellcode() {
         typedef void* (*MessageBoxA_t)(int, char*, char*, int);
 
         // Some compilers insert the strings into the .data no matter what you do. So we need to trick em
-        volatile wchar_t k32[30]; volatile int i = 0;
-        k32[i++] = 'k'; k32[i++] = 'e'; k32[i++] = 'r'; k32[i++] = 'n'; k32[i++] = 'e'; k32[i++] = 'l'; k32[i++] = '3'; k32[i++] = '2'; k32[i++] = '.';
-        k32[i++] = 'd'; k32[i++] = 'l'; k32[i++] = 'l'; k32[i++] = '\0'; 
-        volatile char u32[30]; i = 0;
+        volatile char u32[30]; volatile int i = 0;
         u32[i++] = 'u';  u32[i++] = 's';  u32[i++] = 'e';  u32[i++] = 'r';  u32[i++] = '3';  u32[i++] = '2'; 
         u32[i++] = '.';  u32[i++] = 'd';  u32[i++] = 'l';  u32[i++] = 'l', u32[i++] = '\0';
         volatile char msg[30]; i = 0;
         msg[i++] = 't'; msg[i++] = 'e'; msg[i++] = 's'; msg[i++] = 't', msg[i++] = '\0';
 
-        /*This DOESN'T work on clang/g++ sadly. Goes to data :broken_heart:
-        volatile wchar_t k32[] = { 'k','e','r','n','e','l','3','2','.','d','l','l', 0 };
-        volatile char u32[] = { 'u','s','e','r','3','2','.','d','l','l', 0 };
-        volatile char msg[] = { 'R','e','a','l', 0};
+        /* Note that any definitions should remain stack only. Otherwise the shellcode will be invalid
+       
+        // This gets stored to .data section 100%
+        char s1[] = "test";
+
+        // This gets stored to .data section 50/50 on different compilers
+        char s2[] = {'t', 'e', 's', 't', 0};
+
+        // This is stored to stack in 100% cases. Allows to trick the compiler
+        char s3[32]; int i = 0;
+        s3[i++] = 't', s3[i++] = 'e', s3[i++] = 's', s3[i++] = 't',s3[i++] = '\0';
+
         */
-  
-        void* base = get_module_handle((wchar_t*)&k32);
+        
+        void* base = get_module_handle(HASH("kernel32.dll"));
+
         if (base) {
             LoadLibraryA_t LoadLibA = (LoadLibraryA_t) get_proc_address(base, HASH("LoadLibraryA"));
             if (LoadLibA) {
@@ -65,6 +72,7 @@ SECTION_CODE("shcode") NAKED void shellcode_end(void) {}
 typedef int (*shellcode_t)();
 
 int main() {
+
     FILE* output_file = fopen("shellcode.bin", "wb");
     if (!output_file) {
         fprintf(stderr, "[e] Failed to open shellcode.bin\n");
@@ -130,5 +138,6 @@ int main() {
     printf("Result: %d\n", code());
 
     printf("Shellcode execution completed successfully.\n");
+    
     return 0;
 }

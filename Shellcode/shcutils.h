@@ -46,12 +46,17 @@
     #define NAKED __attribute__((naked))
 #endif
 
+#ifndef TO_LOWERCASE
+    #define TO_LOWERCASE(c1) (c1 <= (char)'Z' && c1 >= (char)'A' ? (c1 - (char)'A') + (char)'a' : c1)
+#endif
+
 // We can hash in compile-time to avoid using string comparing in the shellcode. That saves time & space
 template <typename T, T value>
 INLINE constexpr T ensure_constexpr() { return value; }
 #define CONSTEXPR(x) ensure_constexpr<decltype(x), x>()
 
-INLINE constexpr int adler32(const char* data) {
+template <typename T>
+INLINE constexpr int adler32(const T* data) {
     long kModulus = 65521, a = 1, b = 0;
     for (int i = 0; data[i] != 0; i++) {
         a = (a + data[i]) % kModulus;
@@ -67,10 +72,6 @@ INLINE constexpr int adler32(const char* data) {
     #include <windows.h>
 
     #ifndef __NTDLL_H__
-
-    #ifndef TO_LOWERCASE
-    #define TO_LOWERCASE(out, c1) (out = (c1 <= 'Z' && c1 >= 'A') ? c1 = (c1 - 'A') + 'a': c1)
-    #endif
 
     typedef struct _UNICODE_STRING {
         USHORT Length;
@@ -125,7 +126,7 @@ INLINE constexpr int adler32(const char* data) {
 
     #endif //__NTDLL_H__
 
-    INLINE LPVOID get_module_handle(WCHAR* module_name) {
+    INLINE LPVOID get_module_handle(int hash) {
         PPEB peb = NULL;
         #if defined(_WIN64)
             peb = reinterpret_cast<PPEB>(__readgsqword(0x60));
@@ -140,17 +141,14 @@ INLINE constexpr int adler32(const char* data) {
 
         while (curr_module != NULL && curr_module->BaseAddress != NULL) {
             if (curr_module->BaseDllName.Buffer == NULL) continue;
-            WCHAR* curr_name = curr_module->BaseDllName.Buffer;
 
-            size_t i = 0;
-            for (i = 0; module_name[i] != 0 && curr_name[i] != 0; i++) {
-                WCHAR c1, c2;
-                TO_LOWERCASE(c1, module_name[i]);
-                TO_LOWERCASE(c2, curr_name[i]);
-                if (c1 != c2) break;
-            }
-            if (module_name[i] == 0 && curr_name[i] == 0)
+            WCHAR temp[64];
+            for (volatile int i = 0; i < curr_module->BaseDllName.Length; i++)
+                temp[i] = TO_LOWERCASE(curr_module->BaseDllName.Buffer[i]);
+
+            if (adler32(temp) == hash)
                 return curr_module->BaseAddress;
+
             curr_module = (PLDR_DATA_TABLE_ENTRY)curr_module->InLoadOrderModuleList.Flink;
         }
         return NULL;
