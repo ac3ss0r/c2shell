@@ -30,25 +30,23 @@
 #endif
 
 // Prevents functions from inlining forcefully
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && !defined(__llvm__)
     #define NOINLINE __declspec(noinline)
 #else 
     #define NOINLINE __attribute__((noinline))
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__llvm__)
     #ifdef defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
         #define NAKED __declspec (naked)
-    #else // no naked on x64 w0mp w0mp (note that's the reason why it will crash)
+    #else // no naked on x64 for visual C++ w0mp w0mp (note that's the reason why it will crash)
         #define NAKED
     #endif
 #else
     #define NAKED __attribute__((naked))
 #endif
 
-#ifndef TO_LOWERCASE
-    #define TO_LOWERCASE(c1) (c1 <= (char)'Z' && c1 >= (char)'A' ? (c1 - (char)'A') + (char)'a' : c1)
-#endif
+#define TO_LOWERCASE(c1) (c1 <= (char)'Z' && c1 >= (char)'A' ? (c1 - (char)'A') + (char)'a' : c1)
 
 // We can hash in compile-time to avoid using string comparing in the shellcode. That saves time & space
 template <typename T, T value>
@@ -68,8 +66,7 @@ INLINE constexpr int adler32(const T* data) {
 #define HASH(x) CONSTEXPR(adler32(x))
 
 // On windows we use PEB & TEB
-#ifdef _WINDOWS 
-    #include <windows.h>
+#ifdef _WINDOWS
 
     #ifndef __NTDLL_H__
 
