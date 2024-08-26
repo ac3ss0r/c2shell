@@ -1,4 +1,4 @@
-# ShellcodeLab
+# c2shell
 <div align=center style="background-color: transparent;">
     <img width="100%" src="Images/preview.png"></img>
 </div>
