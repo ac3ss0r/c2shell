@@ -1,7 +1,4 @@
 # c2shell
-<div align=center style="background-color: transparent;">
-    <img width="100%" src="Images/preview.png"></img>
-</div>
 A C/C++ framework designed to simplify shellcode creation on any compilers and platforms using C. Supports Windows & Linux, and practically any existing architecture.
 
 ## ℹ️ Overview & theory
